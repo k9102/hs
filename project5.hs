@@ -31,12 +31,16 @@ getMonthTbl day days i
 
 printMonth  i monthTbl
     | i == length monthTbl = []
-    | i `mod` 7 == 6 = (show (monthTbl !! i))++"\n" ++ (printMonth (i+1) monthTbl)
-    | otherwise =  (show (monthTbl !! i))++"\t" ++ (printMonth (i+1) monthTbl)
+    | i `mod` 7 == 6 = sv ++ "\n" ++ (printMonth (i+1) monthTbl)
+    | otherwise      = sv ++ "\t" ++ (printMonth (i+1) monthTbl)
+    where v = (monthTbl !! i)
+          sv = (if v==0 then " " else (show v) )
 
 
 main  = do
+    putStrLn "Year"
     year <- getLine
+    putStrLn "Month"
     month <- getLine
     let yr = read year::Int
     let mt = read month::Int
@@ -44,7 +48,7 @@ main  = do
     let leapYrs = getLeapYear yrs 
     let commYrs = getCommYear yrs leapYrs
     let yrDay = getYearDay commYrs leapYrs
-    let mtDay = (yrDay+((getSum (mt-1) tbl) + (\x->if x then 1 else 0)(isLeapYr yr))) `mod` 7
+    let mtDay = (yrDay+((getSum (mt-1) tbl) + (\x->if x && (mt > 2) then 1 else 0)(isLeapYr yr))) `mod` 7
     let mtDays = getDaysOfMonth yr mt
     --putStrLn (show yrDay)
     --putStrLn (show mtDay)
