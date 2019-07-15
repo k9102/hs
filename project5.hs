@@ -22,19 +22,11 @@ getDaysOfMonth :: Int-> Int -> Int
 getDaysOfMonth yr 2  = (tbl !! 2) + (\x->if x then 1 else 0)(isLeapYr yr)
 getDaysOfMonth yr mt = (tbl !! mt)
 
-getMonthTbl :: Int -> Int -> Int -> [Int]
-getMonthTbl day days i
-    | day==0 && (days == i) = [i]
-    | day==0                =  i : (getMonthTbl  0    days (i+1))
-    | otherwise             =  0 : (getMonthTbl (day-1) days i)
+getMonthTbl :: Int -> Int -> [Int]
+getMonthTbl day days= tail ([0..day] ++ [1..days])
 
-
-printMonth  i monthTbl
-    | i == length monthTbl = []
-    | i `mod` 7 == 6 = sv ++ "\n" ++ (printMonth (i+1) monthTbl)
-    | otherwise      = sv ++ "\t" ++ (printMonth (i+1) monthTbl)
-    where v = (monthTbl !! i)
-          sv = (if v==0 then " " else (show v) )
+printMonth :: [Int] -> [Char]
+printMonth monthTbl = [ x | a<-[0..(length monthTbl - 1)],x<-if(a `mod` 7 == 6) then show (monthTbl !! a) ++ "\n"  else show (monthTbl !! a) ++ "\t" ]
 
 
 main  = do
@@ -54,7 +46,7 @@ main  = do
     --putStrLn (show mtDay)
     --putStrLn (show mtDays)
     putStrLn "MON\tTUE\tWEN\tTHR\tFRI\tSAT\tSUN"
-    let mtTbl = getMonthTbl mtDay mtDays 1
+    let mtTbl = getMonthTbl mtDay mtDays
     --putStrLn (show mtTbl)
-    let strMt = printMonth 0 mtTbl
+    let strMt = printMonth mtTbl
     putStrLn strMt
